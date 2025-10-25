@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Printers List - Azure Hybrid Cloud Demo{% endblock %}
+
+{% block content %}
+<h2>📊 Printers Data from On-Premises Database</h2>
+
+{% if db_info %}
+<div class="db-info">
+    <strong>🔌 Database Connection:</strong> {{ db_info.user }}@{{ db_info.host }} / {{ db_info.database }}
+</div>
+{% endif %}
+
+{% if printers %}
+<p style="color: #28a745; font-weight: bold; margin-top: 20px;">
+    ✅ Successfully connected to on-premises database via VPN tunnel!
+</p>
+<p style="margin-bottom: 20px;">Total records: <strong>{{ printers|length }}</strong></p>
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    th {
+        background-color: #007bff;
+        color: white;
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+    }
+    td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #ddd;
+    }
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    .status-active {
+        color: #28a745;
+        font-weight: bold;
+    }
+    .status-inactive {
+        color: #dc3545;
+        font-weight: bold;
+    }
+    .uuid {
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #666;
+    }
+</style>
+
+<table>
+    <thead>
+        <tr>
+            <th>Printer ID</th>
+            <th>Printer Name</th>
+            <th>Status</th>
+            <th>Unique ID</th>
+            <th>Inserted</th>
+            <th>Tag</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for printer in printers %}
+        <tr>
+            <td>{{ printer.printer_id }}</td>
+            <td><strong>{{ printer.printer_name }}</strong></td>
+            <td>
+                {% if printer.is_active %}
+                <span class="status-active">✓ Active</span>
+                {% else %}
+                <span class="status-inactive">✗ Inactive</span>
+                {% endif %}
+            </td>
+            <td class="uuid">{{ printer.unique_id }}</td>
+            <td>{{ printer.inserted }}</td>
+            <td>{{ printer.tag if printer.tag else '-' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<div style="background-color: #fff3cd; border: 1px solid #ffc107; padding: 20px; border-radius: 5px; margin-top: 20px;">
+    <h3 style="color: #856404; margin-top: 0;">⚠️ No Data Available</h3>
+    <p style="color: #856404;">Could not retrieve data from the database. Please check:</p>
+    <ul style="color: #856404;">
+        <li>VPN connection is established</li>
+        <li>Database credentials are correct</li>
+        <li>Database is accessible from this container</li>
+        <li>Table 'printers' exists in the database</li>
+    </ul>
+</div>
+{% endif %}
+
+<div style="margin-top: 30px; padding: 20px; background-color: #e7f3ff; border-radius: 5px;">
+    <h3 style="margin-top: 0; color: #004085;">ℹ️ About This Demo</h3>
+    <p style="color: #004085;">
+        This application demonstrates a <strong>Hybrid Cloud Architecture</strong> where:
+    </p>
+    <ul style="color: #004085;">
+        <li><strong>Cloud Computing Layer</strong>: This Flask application runs in Azure Container Apps</li>
+        <li><strong>Secure VPN Tunnel</strong>: Site-to-Site VPN connects Azure to on-premises network</li>
+        <li><strong>On-Premises Data Layer</strong>: PostgreSQL database runs in local infrastructure</li>
+        <li><strong>Hybrid Benefit</strong>: Combines cloud scalability with data sovereignty</li>
+    </ul>
+</div>
+{% endblock %}

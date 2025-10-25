@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Azure Hybrid Cloud Demo{% endblock %}</title>
+    {% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 2.5em;
+        }
+        .header p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 1.1em;
+        }
+        .db-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border-left: 4px solid #007bff;
+        }
+        .db-info strong {
+            color: #007bff;
+        }
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            margin-top: 30px;
+        }
+    </style>
+    {% endblock %}
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            {% block header %}
+            <h1>🌐 Azure Hybrid Cloud Demo</h1>
+            <p>Demonstrating Site-to-Site VPN Connection</p>
+            <p><strong>Cloud App</strong> (Azure Container Apps) ↔️ <strong>On-Premises Database</strong> (PostgreSQL)</p>
+            {% endblock %}
+        </div>
+
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+
+        <div class="footer">
+            {% block footer %}
+            <p>© 2025 Azure Hybrid Cloud PoC | Powered by Flask & PostgreSQL</p>
+            {% endblock %}
+        </div>
+    </div>
+</body>
+</html>
