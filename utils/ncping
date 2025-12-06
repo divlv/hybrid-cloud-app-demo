@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Simple TCP "ping" using netcat (nc).
+# Usage: tcp_ping.sh <host> <port> [interval_seconds] [timeout_seconds]
+# Example: ./tcp_ping.sh myhost 5432 2 5
+
+HOST="$1"
+PORT="$2"
+INTERVAL_SECONDS="${3:-1}"   # default: 2 seconds between checks
+TIMEOUT_SECONDS="${4:-5}"    # default: 5 seconds connect timeout
+
+if [ -z "$HOST" ] || [ -z "$PORT" ]; then
+  echo "Usage: $0 <host> <port> [interval_seconds] [timeout_seconds]"
+  exit 1
+fi
+
+SEQ=1
+
+while true; do
+  TS="$(date '+%H:%M:%S')"
+  START_NS=$(date +%s%N)
+
+  if nc -z -w "${TIMEOUT_SECONDS}" "${HOST}" "${PORT}" >/dev/null 2>&1; then
+    END_NS=$(date +%s%N)
+    RTT_MS=$(( (END_NS - START_NS) / 1000000 ))
+    echo "[${TS}] seq=${SEQ} status=OK target=${HOST}:${PORT} rtt=${RTT_MS}ms"
+  else
+    echo "[${TS}] seq=${SEQ} status=TIMEOUT target=${HOST}:${PORT} (no TCP connect within ${TIMEOUT_SECONDS}s)"
+  fi
+
+  SEQ=$((SEQ + 1))
+  sleep "${INTERVAL_SECONDS}"
+done
